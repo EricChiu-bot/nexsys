@@ -1,0 +1,14 @@
+[
+  {
+    "mqHost": "18.183.122.248",
+    "mqPort": 6672,
+    "mqVirtualHost": "/",
+    "mqUser": "nexsys",
+    "mqPwd": "mnx60764618",
+    "mqExchange": "power_meter.direct",
+    "mqExType": "direct",
+    "mqQueue": "power_meter",
+    "mqRouteKey": "power_meter"
+  }
+]
+

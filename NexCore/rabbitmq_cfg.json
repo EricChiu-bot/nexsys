@@ -1,0 +1,14 @@
+[
+    {
+		"mqType": "In/Out",
+        "mqHost": "18.183.122.248",
+        "mqPort": 6672,
+        "mqVirtualHost": "/",
+        "mqUser": "nexsys",
+		"mqPwd": "mnx60764618",
+		"mqExchange": "temp_RH.direct",
+        "mqExType": "direct",
+		"mqQueue": "temp_RH",
+        "mqRouteKey": "temp_RH"
+    }
+]

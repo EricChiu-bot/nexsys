@@ -1,0 +1,10 @@
+[
+  {
+    "host": "18.183.122.248",
+    "port": 27018,
+    "user": "nexsys",
+    "pwd": "mnx60764618",
+    "dbName": "nexsys_data",
+    "collName": "s001d0002"
+  }
+]

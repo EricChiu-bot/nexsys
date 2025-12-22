@@ -1,0 +1,13 @@
+[
+  {
+    "host": "18.183.122.248",
+    "localhost":"127.0.0.1",
+    "port_1": 27017,
+    "port_2": 27018,
+    "port_3": 27019,
+    "user": "nexsys",
+    "pwd": "mnx60764618",
+    "dbName": "nexsys_data",
+    "collName": "s001d0001"
+  }
+]

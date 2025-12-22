@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "temp_RH rtu_rmq",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/workers/rtu_rmq.py",
+      "console": "integratedTerminal",
+      "env": {
+        "ENV_FILE": "${workspaceFolder}/.env_temp_RH"
+      }
+    },
+    {
+      "name": "power_meter rtu_tcp_p_rmq",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/workers/rtu_tcp_p_rmq.py",
+      "console": "integratedTerminal",
+      "env": {
+        "ENV_FILE": "${workspaceFolder}/.env_power"
+      }
+    }
+  ]
+}

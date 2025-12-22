@@ -1,0 +1,19 @@
+{
+    "tgtAmr": "10.0.1.80",
+    "tgtRestSrv": "http://10.0.1.111:8080/api/v2/de/data_nodes/reports",
+    "tgtRestHeader":
+    {
+        "accept": "application/json",
+        "Content-Type":"application/json",
+        "charset": "UTF-8",
+        "vip-data-node-vender-token":"9b371985d875c975869c0c644eff7ec682306b867146be8541a024fe97e5f5c8"
+    },
+    "tgtRestPort": 8080,
+    "tgtMqttSrv": "10.0.1.111",
+    "tgtMqttPort": 1821,
+    "tgtMqttTrans": "TCP",
+    "mqttTopic": "amr/position",
+    "mqttCmdTopic": "amr/command",
+    "mongoSetting": "mongo_setting.json",
+    "rabbitSetting": "rabbitmq_setting.json"
+}

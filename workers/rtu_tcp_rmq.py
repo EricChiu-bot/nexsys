@@ -79,7 +79,6 @@ WORKER_VERSION = os.environ.get("WORKER_VERSION")
 MODBUS_HOST       = _required("MODBUS_HOST")
 MODBUS_PORT       = int(_required("MODBUS_PORT"))
 MODBUS_SLAVE_ID = int(_required("MODBUS_SLAVE_ID")) 
-MODBUS_UNIT_1       = float(_required("MODBUS_UNIT_1"))
 READ_INTERVAL_SEC = float(_required("READ_INTERVAL_SEC"))
 
 #RTU
@@ -88,6 +87,9 @@ BYTESIZE = int(os.environ.get("RTU_BYTESIZE"))
 PARITY   = os.environ.get("RTU_PARITY")
 STOPBITS = int(os.environ.get("RTU_STOPBITS"))
 TIMEOUT  = float(os.environ.get("RTU_TIMEOUT"))
+
+# ── 新增：JSON mapping ──
+MODBUS_REGISTERS_MAPPING = json.loads(_required("MODBUS_REGISTERS_MAPPING"))
 
 # ── RabbitMQ（Use MNXNexlib config） ──
 # 讀 MNXNexlib 的設定檔（與 test_send.py 同一份）
@@ -181,14 +183,18 @@ def read_modbus() -> dict | None:
             log.error("讀取失敗: %s", rr)
             return None
 
-        humi_raw, temp_raw = rr.registers
+        registers = rr.registers
         device_ts_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
-        return {
-            "ts": device_ts_iso,
-            "temperature": round(float(temp_raw) * MODBUS_UNIT_1, 1), #最後一個是取幾個小數點
-            "humidity":    round(float(humi_raw) * MODBUS_UNIT_1, 1),
-        }
+        metrics = {"ts": device_ts_iso}
+        for mapping in MODBUS_REGISTERS_MAPPING:
+            idx = mapping["index"]
+            key = mapping["key"]
+            raw = registers[idx]
+            value = round(float(raw) * mapping["unit"], mapping["decimals"])
+            metrics[key] = value
+
+        return metrics
     finally:
         try:
             cli.close()
@@ -207,10 +213,7 @@ def build_transport(metrics: dict) -> dict:
             "worker_version": WORKER_VERSION,
             "status": "OK",
         },
-        "payload": {
-            "temperature": metrics["temperature"],
-            "humidity": metrics["humidity"],
-        },
+        "payload": {k: v for k, v in metrics.items() if k != "ts"},  # 動態放所有 key
     }
 
 # ── 發佈（改成呼叫 MNXNexlib 的 mq） ──

@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 88  # 跟 Black 保持一致
+
+[tool.ruff.format]
+# 關鍵：明確告訴 Ruff 不要提供 formatter
+preview = false
+# 這些是 Black 的標準設定，讓 Ruff 的 lint 不會跟 Black 打架
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.black]
+line-length = 88

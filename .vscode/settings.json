@@ -1,0 +1,8 @@
+{
+    "python.defaultInterpreterPath": ".venv1117/Scripts/python.exe",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "ruff.enable": true,
+    "ruff.importStrategy": "fromEnvironment"
+}

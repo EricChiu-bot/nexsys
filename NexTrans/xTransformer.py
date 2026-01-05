@@ -19,7 +19,9 @@ def calc_read_count(mapping: List[Dict[str, Any]]) -> int:
     return int(max_index) + 1
 
 
-def transform_registers(mapping: List[Dict[str, Any]], regs: List[int]) -> Dict[str, Any]:
+def transform_registers(
+    mapping: List[Dict[str, Any]], regs: List[int]
+) -> Dict[str, Any]:
     """
     raw registers -> payload metrics
     支援：
@@ -55,3 +57,11 @@ def transform_registers(mapping: List[Dict[str, Any]], regs: List[int]) -> Dict[
         out[key] = round(float(raw) * unit, decimals)
 
     return out
+
+
+def transform_json(payload: dict, cfg: dict) -> Dict[str, Any]:
+    """
+    MQTT 專用：直接轉發 JSON payload，或者在此做欄位對應
+    """
+    # 這裡可以實作欄位過濾或重命名，目前先全部轉發
+    return payload

@@ -12,13 +12,14 @@ import logging
 import signal
 import time
 
-from NexCom.env_loader import load_env, required, get_int, get_float, get_json
+# noqa: E402
+from NexCom.env_loader import get_float, get_int, get_json, load_env, required
 from NexCom.envelope_builder import build_telemetry_v1, utc_iso_now
 from NexDrv.xModbusRtuTcp import ModbusRtuTcpDriver, RtuParams
-from NexTrans.xTransformer import calc_read_count, transform_registers
 from NexPub.xRabbitPublisher import RabbitPublisher
+from NexTrans.xTransformer import calc_read_count, transform_registers
 
-#優雅停止
+# 優雅停止
 _STOP = False
 
 
@@ -32,7 +33,11 @@ def main() -> int:
     print("[ENV] loaded:", env_path)
 
     # ---- logging ----
-    log_level = required("LOG_LEVEL").upper() if "LOG_LEVEL" in __import__("os").environ else "ERROR"
+    log_level = (
+        required("LOG_LEVEL").upper()
+        if "LOG_LEVEL" in __import__("os").environ
+        else "ERROR"
+    )
     logging.basicConfig(
         level=getattr(logging, log_level, logging.ERROR),
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -65,8 +70,18 @@ def main() -> int:
     read_count = calc_read_count(mapping)
 
     # ---- publisher env ----
-    mnx_lib_root = required("MNX_LIB_ROOT")
-    rmq_cfg_path = required("RMQ_CFG_PATH")
+    # [Robust Design] 自動偵測路徑，若 env 沒設定或路徑不存在(跨平台)就用預設值
+    default_lib_root = str(PROJECT_ROOT)
+    mnx_lib_root = __import__("os").environ.get("MNX_LIB_ROOT")
+
+    # 如果沒設定，或者設定的路徑不存在 (例如 .env 裡是 Windows 路徑但現在跑在 Mac)
+    if not mnx_lib_root or not Path(mnx_lib_root).exists():
+        mnx_lib_root = default_lib_root
+
+    # 若沒設定 RMQ_CFG_PATH，或者路徑不存在，就預設在 NexCore 底下找
+    rmq_cfg_path = __import__("os").environ.get("RMQ_CFG_PATH")
+    if not rmq_cfg_path or not Path(rmq_cfg_path).exists():
+        rmq_cfg_path = str(Path(mnx_lib_root) / "NexCore" / "rabbitmq_cfg.json")
 
     # ---- init components ----
     driver = ModbusRtuTcpDriver(host, port, rtu)
@@ -76,7 +91,9 @@ def main() -> int:
 
     while not _STOP:
         try:
-            regs = driver.read_registers(fc=fc, address=0, count=read_count, unit=slave_id)
+            regs = driver.read_registers(
+                fc=fc, address=0, count=read_count, unit=slave_id
+            )
             if regs:
                 payload = transform_registers(mapping, regs)
                 ts = utc_iso_now()

@@ -21,6 +21,9 @@ rsa>=4.9
 websockets>=11.0.3
 python-dotenv
 pymodbus==2.5.3
+# Added for Sync OPCUA Worker
+opcua>=0.98.13
+lxml
 #
 #
 # For AI related stuff
